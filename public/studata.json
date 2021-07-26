@@ -1,0 +1,11 @@
+{
+    "code": "200",   
+    "data": {
+        "grade": "2018",
+        "college": "xx学院",
+        "stunumber": "123",
+        "name": "cc",
+        "sex": "男",
+        "phonenumber": "123456"
+    }
+}

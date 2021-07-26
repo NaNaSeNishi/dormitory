@@ -1,0 +1,17 @@
+
+Post请求(application/json)
+{
+    "username":"xxx",
+    "password":"123",
+    "usertype":"0"
+}
+
+
+
+{
+    "code":"200",   //登录失败返回code 500
+    "data":{
+        "id":"001",
+        "username":"xxx"
+    }
+}

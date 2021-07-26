@@ -1,0 +1,52 @@
+
+GET ?id=XXX(student_id)
+{
+    "code":"200",
+    "data":[
+        {
+            "id":"1",
+            "name":"cc",
+            "dormitory":"123",
+            "describe":"xxx",
+            "date":"xxx",
+            "state":"xxxxxxxxxxxx"
+        },
+        {
+            "id":"2",
+            "name":"cc",
+            "dormitory":"123",
+            "describe":"xxx",
+            "date":"xxx",
+            "state":"xxxxxxxxxxxx"
+        },
+        {
+            "id":"3",
+            "name":"cc",
+            "dormitory":"123",
+            "describe":"xxx",
+            "date":"xxx",
+            "state":"xxxxxxxxxxxx"
+        }
+    ]
+}
+
+
+POST(application/json)
+{
+    "username": "xxx",
+    "dormitory": "xxx",
+    "describe": "xxx",
+    "date": "xxx"  //javascript Date() 方法的值
+}
+
+{
+    "code":"200",  //500失败
+    "msg":"添加成功"
+}
+
+
+DELETE  ?id=xxx (repair id)   
+{
+    "code":"200",   //500 失败
+    "msg":"删除成功"
+}

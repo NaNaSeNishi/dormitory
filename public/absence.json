@@ -1,0 +1,29 @@
+{
+    "code":"200",
+    "data":[
+        {
+            "id":"1",
+            "name":"cc",
+            "dormitory":"123",
+            "start_time":"xxx",
+            "end_time":"xxx",
+            "remark":"xxxxxxxxxxxx"
+        },
+        {
+            "id":"2",
+            "name":"cc",
+            "dormitory":"123",
+            "start_time":"xxx",
+            "end_time":"xxx",
+            "remark":"xxxxxxxxxxxx"
+        },
+        {
+            "id":"3",
+            "name":"cc",
+            "dormitory":"123",
+            "start_time":"xxx",
+            "end_time":"xxx",
+            "remark":"xxxxxxxxxxxx"
+        }
+    ]
+}
