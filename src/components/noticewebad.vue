@@ -1,14 +1,13 @@
   <template>
   <div id="re">
-  
+    <el-button type="primary" @click="dialogVisible = true">添加</el-button>
     <el-table :data="tableData1" style="width: 100%">
       <el-table-column prop="id" label="ID" width="180"> </el-table-column>
-      <el-table-column prop="stu_name" label="姓名" width="180"> </el-table-column>
+      <el-table-column prop="title" label="标题" width="180"> </el-table-column>
+      <el-table-column prop="content" label="内容"> </el-table-column>
+      <el-table-column prop="publish_time" label="发布时间"> </el-table-column>
+      <el-table-column prop="publisher" label="发布人"> </el-table-column>
       <el-table-column prop="building_name" label="楼栋"> </el-table-column>
-      <el-table-column prop="dormitory" label="宿舍编号"> </el-table-column>
-      <el-table-column prop="description" label="描述"> </el-table-column>
-      <el-table-column prop="apply_date" label="日期"> </el-table-column>
-      <el-table-column prop="state" label="状态"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -32,24 +31,31 @@
       >
       </el-pagination>
     </div>
-    <el-dialog title="添加报修" :visible.sync="dialogVisible" width="50%">
+    <el-dialog title="添加公告" :visible.sync="dialogVisible" width="50%">
       <el-form ref="addFormRef" :model="addForm" label-width="70px">
-        <el-form-item label="姓名" prop="username">
-          <el-input v-model="addForm.username"></el-input>
+        <el-form-item label="标题" prop="title">
+          <el-input v-model="addForm.title"></el-input>
         </el-form-item>
-        <el-form-item label="宿舍" prop="dor">
-          <el-input v-model="addForm.dor"></el-input>
+        <el-form-item label="内容" prop="content">
+          <el-input v-model="addForm.content"></el-input>
         </el-form-item>
-        <el-form-item label="描述" prop="describe">
-          <el-input v-model="addForm.describe"></el-input>
+        <el-form-item label="发布时间" prop="publish_time">
+          <el-date-picker
+      v-model="addForm.publish_time"
+      type="datetime"
+      placeholder="选择日期时间">
+    </el-date-picker>
         </el-form-item>
-        <el-form-item label="日期" prop="date">
-          <el-input v-model="addForm.date"></el-input>
+        <el-form-item label="发布人" prop="publisher">
+          <el-input v-model="addForm.publisher"></el-input>
+        </el-form-item>
+        <el-form-item label="楼栋号" prop="building_id">
+          <el-input v-model="addForm.building_id"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
         <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="addUser">确 定</el-button>
+        <el-button type="primary" @click="addnotice">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -63,10 +69,11 @@ export default {
       tableData1: [],
       dialogVisible: false,
       addForm: {
-        username: "",
-        dor: "",
-        describe: "",
-        date: Date(),
+        title: "",
+        content: "",
+        publish_time: "",
+        publisher: "",
+        building_id:''
       },
       currentPage: 0,
       total: 0,
@@ -74,35 +81,43 @@ export default {
     };
   },
   created() {
-    this.getlivestockInfo(1);
+    this.getlivestockInfo(1)
   },
   methods: {
-    addUser() {
+    addnotice() {
       axios
-        .post("http://localhost:9091/springboot/repair/add", {
-          username: this.addForm.username,
-          dormitory: this.addForm.dormitory,
-          describe: this.addForm.describe,
-          date: "2021-07-13 11:26:51",
+        .post("http://localhost:9091/springboot/notice/add", {
+          title: this.addForm.title,
+          content: this.addForm.content,
+          publish_time: this.addForm.publish_time,
+          publisher: this.addForm.publisher,
+          building_id:this.addForm.building_id,
+          houseparent_id: window.sessionStorage.getItem("adminid"),
         })
         .then(function (response) {
           console.log(response.data);
           if (response.data.code == 200) {
             alert("添加成功");
-            axios
-              .get("http://localhost:9091/springboot/houseparent/queryrepair", {
+            var i = window.sessionStorage.getItem("adminid");
+              axios
+              .get("http://localhost:9091/springboot/notice", {
                 params: {
-                  page: 1,
+                  page: num1,
                   pageSize: this.pageSize,
                 },
               })
               .then((response) => {
                 // 请求成功
                 console.log("请求成功");
-                console.log(response.data);
                 this.tableData1 = response.data.data.list;
+                this.currentPage = num1;
                 this.pageSize = this.pageSize;
                 this.total = response.data.data.total;
+              })
+              .catch((error) => {
+                // 请求失败
+                console.log("请求失败");
+                console.log(error);
               });
           }
         });
@@ -117,11 +132,11 @@ export default {
     handleCurrentChange(val) {
       console.log(`当前页: ${val}`);
       this.currentPage = val;
-      this.getlivestockInfo(val);
+      this.getlivestockInfo(val)
     },
     getlivestockInfo(num1) {
       axios
-        .get("http://localhost:9091/springboot/houseparent/queryrepair", {
+        .get("http://localhost:9091/springboot/notice", {
           params: {
             page: num1,
             pageSize: this.pageSize,
@@ -130,9 +145,7 @@ export default {
         .then((response) => {
           // 请求成功
           console.log("请求成功");
-          console.log(response.data);
           this.tableData1 = response.data.data.list;
-          this.currentPage = num1;
           this.pageSize = this.pageSize;
           this.total = response.data.data.total;
         })
@@ -149,30 +162,29 @@ export default {
         cancelButtonText: "取消",
         type: "warning",
       }).then(() => {
-        axios
-          .delete("http://localhost:9091/springboot/repair/del?id=" + row.id)
-          .then((response) => {
-            if (response.data.code == 200) {
-              axios
-                .get(
-                  "http://localhost:9091/springboot/houseparent/queryrepair",
-                  {
-                    params: {
-                      page: 1,
-                      pageSize: this.pageSize,
-                    },
-                  }
-                )
-                .then((response) => {
-                  // 请求成功
-                  console.log("请求成功");
-                  console.log(response.data);
-                  this.tableData1 = response.data.data.list;
-                  this.pageSize = this.pageSize;
-                  this.total = response.data.data.total;
-                });
-            }
-          });
+        axios.delete("http://localhost:9091/springboot/notice/del?id="+row.id).then((response) => {
+          if (response.data.code == 200) {
+            axios
+              .get("http://localhost:9091/springboot/notice", {
+                params: {
+                  page: 1,
+                  pageSize: 5,
+                },
+              })
+              .then((response) => {
+                // 请求成功
+                console.log("请求成功");
+                this.tableData1 = response.data.data.list;
+                this.pageSize = this.pageSize;
+                this.total = response.data.data.total;
+              })
+              .catch((error) => {
+                // 请求失败
+                console.log("请求失败");
+                console.log(error);
+              });
+          }
+        });
         this.$message({
           type: "success",
           message: "删除成功!",

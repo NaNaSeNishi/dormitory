@@ -46,17 +46,22 @@
         <el-form-item label="学生" prop="stu_id">
           <el-input v-model="addForm.stu_id"></el-input>
         </el-form-item>
+        <el-form-item label="电话" prop="phone">
+          <el-input v-model="addForm.phone"></el-input>
+        </el-form-item>
         <el-form-item label="开始时间" prop="start_time">
-          <el-input
-            v-model="addForm.start_time"
-            placeholder="xxxx-xx-xx xx:xx"
-          ></el-input>
+          <el-date-picker
+      v-model="addForm.start_time"
+      type="datetime"
+      placeholder="选择日期时间">
+    </el-date-picker>
         </el-form-item>
         <el-form-item label="结束时间" prop="end_time">
-          <el-input
-            v-model="addForm.end_time"
-            placeholder="xxxx-xx-xx xx:xx"
-          ></el-input>
+         <el-date-picker
+      v-model="addForm.end_time"
+      type="datetime"
+      placeholder="选择日期时间">
+    </el-date-picker>
         </el-form-item>
         <el-form-item label="备注" prop="remark">
           <el-input v-model="addForm.remark"></el-input>
@@ -81,6 +86,7 @@ export default {
       addForm: {
         visname: "",
         sex: "",
+        phone:"",
         stu_id: "",
         start_time: "",
         end_time: "",
@@ -114,6 +120,7 @@ export default {
         .post("http://localhost:9091/springboot/houseparent/addvisitor", {
           visname: this.addForm.visname,
           sex: this.addForm.sex,
+          stu_id:this.addForm.stu_id,
           start_time: this.addForm.start_time,
           end_time: this.addForm.end_time,
           remark: this.addForm.remark,
@@ -153,6 +160,7 @@ export default {
       this.currentPage = 1;
       this.pageSize = val;
       console.log(this.pageSize);
+      this.getlivestockInfo(this.currentPage);
     },
 
     handleCurrentChange(val) {
@@ -174,7 +182,7 @@ export default {
           console.log(response.data);
           this.tableData = response.data.data.list;
           this.currentPage = num1;
-          this.pageSize = this.pageSize;
+          this.pageSize = response.data.data.pageSize;
           this.total = response.data.data.total;
         })
         .catch((error) => {

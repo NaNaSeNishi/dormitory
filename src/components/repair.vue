@@ -3,9 +3,10 @@
     <el-button type="primary" @click="dialogVisible = true">添加</el-button>
     <el-table :data="tableData1" style="width: 100%">
       <el-table-column prop="id" label="ID" width="180"> </el-table-column>
-      <el-table-column prop="name" label="姓名" width="180"> </el-table-column>
-      <el-table-column prop="dormitory_id" label="宿舍"> </el-table-column>
-      <el-table-column prop="describe" label="描述"> </el-table-column>
+      <el-table-column prop="stu_name" label="姓名" width="180"> </el-table-column>
+      <el-table-column prop="building_name" label="楼栋"> </el-table-column>
+      <el-table-column prop="dormitory" label="宿舍号"> </el-table-column>
+      <el-table-column prop="description" label="描述"> </el-table-column>
       <el-table-column prop="apply_date" label="日期"> </el-table-column>
       <el-table-column prop="state" label="状态"> </el-table-column>
       <el-table-column label="操作">
@@ -31,7 +32,11 @@
           <el-input v-model="addForm.describe"></el-input>
         </el-form-item>
         <el-form-item label="日期" prop="date">
-          <el-input v-model="addForm.date"></el-input>
+          <el-date-picker
+      v-model="addForm.date"
+      type="datetime"
+      placeholder="选择日期时间">
+    </el-date-picker>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -53,7 +58,7 @@ export default {
         username: "",
         dor: "",
         describe: "",
-        date: Date(),
+        date: "",
       },
     };
   },
@@ -116,7 +121,7 @@ export default {
                   "?student_id=" +
                   Number(i))
                 .then((response) => {
-                  that.tableData1 = response.data.data.list;
+                  that.tableData1 = response.data.data;
                   console.log(that.tableData1);
                 });
             }

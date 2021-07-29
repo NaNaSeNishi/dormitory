@@ -3,22 +3,27 @@
 <div id="top"></div>
 <div id="lala">
   <el-card class="box-card">
-    <div id="title">L o g i n</div>
+    <div id="title">学生宿舍管理系统</div>
     <div id="username">
       <el-input placeholder="请输入账户名" v-model="username" id="input1">
         <template slot="prepend">账号：</template>
       </el-input>
     </div>
     <div style="margin: 20px 0"></div>
-    <el-input placeholder="请输入密码" v-model="password">
+    <el-input placeholder="请输入密码" show-password v-model="password">
       <template slot="prepend">密码：</template>
     </el-input>
     <div style="margin: 20px 0"></div>
     <div>
-      请选择用户类型：
-      <el-radio v-model="usertype" label="0">系统管理员</el-radio>
-      <el-radio v-model="usertype" label="1">宿管员</el-radio>
-      <el-radio v-model="usertype" label="2">学生</el-radio>
+      <el-select v-model="value" placeholder="请选择用户类型">
+    <el-option
+      v-for="item in users"
+      :key="item.value"
+      :label="item.label"
+      :value="item.value">
+      <span style="float: left">{{ item.label }}</span>
+    </el-option>
+  </el-select>
       <div style="margin: 20px 0"></div>
     </div>
     <el-button type="primary" @click="toHome">登录</el-button>
@@ -36,20 +41,31 @@ export default {
   name: "login",
   data() {
     return {
+      users: [{
+          value: '0',
+          label: '管理员'
+        }, {
+          value: '1',
+          label: '宿管员'
+        }, {
+          value: '2',
+          label: '学生'
+        }],
+
       username: "",
       password: "",
-      usertype: "",
+      value: "",
     };
   },
   methods: {
     toHome() {
-      var ut = Number(this.usertype);
+      var ut = Number(this.value);
       const that = this;
       axios
         .post("http://localhost:9091/springboot/login", {
           username: this.username,
           password: this.password,
-          usertype: Number(this.usertype)
+          usertype: Number(this.value)
         })
         .then(function (response) {
           console.log(response.data);
@@ -57,14 +73,17 @@ export default {
               alert("用户名或密码错误")
           }
           if(response.data.code == 200 && ut == 0){
-              that.$router.push("/webadmin")
+              that.$router.push("/webadmin");
+              window.sessionStorage.setItem('adname',response.data.data.name);
           }
           if(response.data.code == 200 && ut == 1){
               window.sessionStorage.setItem('adminid',response.data.data.id);
+              window.sessionStorage.setItem('name',response.data.data.name);
               that.$router.push("/doradmin")
           }
           if(response.data.code == 200 && ut == 2){
               window.sessionStorage.setItem('userid',response.data.data.id);
+              window.sessionStorage.setItem('stuname',response.data.data.name);
               that.$router.push("/student")
           }
         });

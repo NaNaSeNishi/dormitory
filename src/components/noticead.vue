@@ -7,7 +7,7 @@
       <el-table-column prop="content" label="内容"> </el-table-column>
       <el-table-column prop="publish_time" label="发布时间"> </el-table-column>
       <el-table-column prop="publisher" label="发布人"> </el-table-column>
-      <el-table-column prop="building_id" label="楼栋"> </el-table-column>
+      <el-table-column prop="building_name" label="楼栋"> </el-table-column>
       <el-table-column label="操作">
         <template slot-scope="scope">
           <el-button
@@ -40,10 +40,17 @@
           <el-input v-model="addForm.content"></el-input>
         </el-form-item>
         <el-form-item label="发布时间" prop="publish_time">
-          <el-input v-model="addForm.publish_time"></el-input>
+          <el-date-picker
+      v-model="addForm.publish_time"
+      type="datetime"
+      placeholder="选择日期时间">
+    </el-date-picker>
         </el-form-item>
         <el-form-item label="发布人" prop="publisher">
           <el-input v-model="addForm.publisher"></el-input>
+        </el-form-item>
+        <el-form-item label="楼栋号" prop="building_id">
+          <el-input v-model="addForm.building_id"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -64,12 +71,13 @@ export default {
       addForm: {
         title: "",
         content: "",
-        publish_time: Date(),
+        publish_time: "",
         publisher: "",
+        building_id:''
       },
       currentPage: 0,
       total: 0,
-      pageSize: 0,
+      pageSize: 5,
     };
   },
   created() {
@@ -78,11 +86,12 @@ export default {
   methods: {
     addnotice() {
       axios
-        .post("http://localhost:8088/notice/add", {
+        .post("http://localhost:9091/springboot/notice/add", {
           title: this.addForm.title,
           content: this.addForm.content,
           publish_time: this.addForm.publish_time,
           publisher: this.addForm.publisher,
+          building_id:this.addForm.building_id,
           houseparent_id: window.sessionStorage.getItem("adminid"),
         })
         .then(function (response) {
