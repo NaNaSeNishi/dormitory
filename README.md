@@ -1,5 +1,9 @@
 # dormitory
 
+## 宿舍管理系统前端
+
+~~小烂不算烂~~
+
 ## Project setup
 ```
 npm install
